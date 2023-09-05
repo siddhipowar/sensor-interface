@@ -19,7 +19,12 @@ async def root(serial=None):
 @app.get("/discover-cameras")
 async def get_discovered_cameras():
     return camera_utils.get_cameras()
-    
+
+# connect to the camera selected
+@app.post("/connect-to-camera/{serial_no}")  
+async def connectToCamera(serial: str):
+    camera_utils.start_streaming(serial)
+    return {"message": "connected to the camera"}
     
 # input the settings for the camera stream
 @app.post("/camera-settings/{serial_no}")

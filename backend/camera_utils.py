@@ -19,7 +19,7 @@ async def get_cameras():
         return {"message": "no cameras found"}
     
     
-async def start_streaming(serial:str, settings: camera_settings):
+async def start_streaming(serial:str):
     # connects to the selected camera and starts streaming
     cam = tof.KeaCamera(serial=serial)
     cam.start()
