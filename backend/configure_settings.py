@@ -1,4 +1,4 @@
-from models import camera_settings
+from models.camera_settings_model import camera_settings
 import chronoptics.tof as tof
 
 #set up camera configurations

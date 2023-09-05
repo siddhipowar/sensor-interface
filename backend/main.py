@@ -6,10 +6,17 @@ from typing import List
 import uvicorn
 import camera_utils
 import configure_settings
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+) 
 
 @app.get("/")
 async def root(serial=None):
@@ -18,7 +25,7 @@ async def root(serial=None):
 #discover cameras to connect to
 @app.get("/discover-cameras")
 async def get_discovered_cameras():
-    return camera_utils.get_cameras()
+    return await camera_utils.get_cameras()
 
 # connect to the camera selected
 @app.post("/connect-to-camera/{serial_no}")  
