@@ -1,8 +1,9 @@
 import React from 'react';
+import DiscoverCameraComponent from './Components/DiscoverCameraComponent';
 
 const App = () => {
     return (
-        <h1>App</h1>
+        <DiscoverCameraComponent/>
     );
 }
 
