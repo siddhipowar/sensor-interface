@@ -2,6 +2,9 @@ import chronoptics.tof as tof
 from models.camera_model import camera
 from models.camera_settings_model import camera_settings
 
+#keep track of connected cameras
+connected_cameras = {}
+
 #discover list of cameras available to connect
 async def get_cameras():
     # shows a list of available cameras to connect to
@@ -23,9 +26,16 @@ async def get_cameras():
 async def start_streaming(serial:str):
     # connects to the selected camera and starts streaming
     cam = tof.KeaCamera(serial=serial)
+    connected_cameras[serial] = cam
     cam.start()
 
-    return {"message": "connected to the camera"}
+async def stop_streaming(serial:str):
+    # connects to the selected camera and stops streaming
+    if serial in connected_cameras:
+        # If the camera is connected pop out of the connected_cameras dictionary and stop streaming
+        cam = connected_cameras.pop(serial)
+        cam.stop()
+
 
 #def stop_streaming(serial:str):
 

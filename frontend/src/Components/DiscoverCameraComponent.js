@@ -24,7 +24,7 @@ export default function DiscoverCameraComponent() {
     return (
         <div>
             <h2>Discover available cameras</h2>
-            <button onClick={fetchCameras}>Connect</button>
+            <button onClick={fetchCameras}>Find Cameras</button>
             {showCameraList && (
                 <div>
                     <h3>Available Cameras:</h3>

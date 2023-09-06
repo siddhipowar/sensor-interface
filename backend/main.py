@@ -27,11 +27,17 @@ async def root(serial=None):
 async def get_discovered_cameras():
     return await camera_utils.get_cameras()
 
-# connect to the camera selected
-@app.post("/connect-to-camera/{serial_no}")  
+# connect to the camera selected. Pass camera serial number as API query parameter
+@app.post("/connect-to-camera")  
 async def connectToCamera(serial: str):
     camera_utils.start_streaming(serial)
     return {"message": "connected to the camera"}
+
+# stop streaming from the camera
+@app.post("/stop-camera-stream")  
+async def stopCameraStream(serial: str):
+    camera_utils.stop_streaming(serial)
+    return {"message": "Stopped camera stream"}
     
 # input the settings for the camera stream
 @app.post("/camera-settings/{serial_no}")
