@@ -1,0 +1,38 @@
+/* Navbar.css */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0906a8;
+    padding: 10px 10px;
+    color: #fff;
+  }
+  
+  .navbar-logo {
+    flex: 1; /* To make the logo take up the leftmost space */
+  }
+  
+  .logo {
+    width: 100px; /* Adjust the size as needed */
+    height: auto;
+  }
+  
+  .navbar-menu {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .navbar-item {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .navbar-item a {
+    text-decoration: none;
+    color: #fff;
+  }
+  
+  /* Add more styles as needed */
+  
