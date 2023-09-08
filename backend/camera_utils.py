@@ -2,8 +2,11 @@ import chronoptics.tof as tof
 from models.camera_model import camera
 from models.camera_settings_model import camera_settings
 
-#keep track of connected cameras
-connected_cameras = {}
+class CameraManager:
+    def __init__(self, serial):
+        self.cam = tof.kea_camera(serial)
+
+streamingCameraList = []
 
 #discover list of cameras available to connect
 async def get_cameras():
@@ -20,24 +23,49 @@ async def get_cameras():
     if camera_list:
         return camera_list
     else:
-        return {"message": "no cameras found"}
+        return []
     
-    
+# connects to the selected camera and starts streaming    
 async def start_streaming(serial:str):
-    # connects to the selected camera and starts streaming
     cam = tof.KeaCamera(serial=serial)
-    connected_cameras[serial] = cam
+    types = [tof.FrameType.INTENSITY, tof.FrameType.XYZ]
+    tof.selectStreams(cam, types)
+    streamingCameraList.append(CameraManager(serial))
     cam.start()
+    print(cam.isStreaming(), "hello")
 
+# connects to the selected camera and stops streaming
 async def stop_streaming(serial:str):
-    # connects to the selected camera and stops streaming
-    if serial in connected_cameras:
-        # If the camera is connected pop out of the connected_cameras dictionary and stop streaming
-        cam = connected_cameras.pop(serial)
-        cam.stop()
+    # if serial in streamingCameraList:
+    if len(streamingCameraList):
+        for i in streamingCameraList:
+            if i.cam.getSerial() == serial:
+                print(i.cam.isStreaming())
+                print(i.cam.getStreamList())
+                print(i.cam.getSerial())
+    #print(cam.isStreaming())
+    # if cam.isConnected():
+    #     cam.stop()
 
+# Gets frames of frame type intensity
+async def get_intensity_frames(serial:str) -> list:
+    frames = []
+    types = [tof.FrameType.INTENSITY]
+    cam = tof.KeaCamera(serial=serial)
+    tof.selectStreams(cam, types)
+    while cam.isStreaming():
+        frames = cam.getFrames
+    return frames
 
-#def stop_streaming(serial:str):
+# Gets frames of frame type XYZ         
+async def get_xyz_frames(serial:str) -> list:
+    frames = []
+    types = [tof.FrameType.XYZ]
+    cam = tof.KeaCamera(serial=serial)
+    tof.selectStreams(cam, types)
+    while cam.isStreaming():
+        frames = cam.getFrames
+    return frames
 
 
 

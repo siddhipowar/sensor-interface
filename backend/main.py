@@ -1,16 +1,13 @@
-from fastapi import FastAPI
-import chronoptics.tof as tof
+from fastapi import FastAPI, WebSocket
 from models.camera_settings_model import camera_settings
-from models.camera_model import camera
-from typing import List
 import uvicorn
 import camera_utils
 import configure_settings
 from fastapi.middleware.cors import CORSMiddleware
 
-
 app = FastAPI()
 
+# Allowing CORS origin
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -30,13 +27,14 @@ async def get_discovered_cameras():
 # connect to the camera selected. Pass camera serial number as API query parameter
 @app.post("/connect-to-camera")  
 async def connectToCamera(serial: str):
-    camera_utils.start_streaming(serial)
+    print(serial)
+    await camera_utils.start_streaming(serial)
     return {"message": "connected to the camera"}
 
 # stop streaming from the camera
 @app.post("/stop-camera-stream")  
 async def stopCameraStream(serial: str):
-    camera_utils.stop_streaming(serial)
+    await camera_utils.stop_streaming(serial)
     return {"message": "Stopped camera stream"}
     
 # input the settings for the camera stream
@@ -44,6 +42,25 @@ async def stopCameraStream(serial: str):
 async def set_configs(serial_no: str, settings: camera_settings):
     configure_settings.set_camera_configuration(serial_no, settings)
     return {"message": "camera configurations are set"}
+
+# Endpoint to stream intensity frames
+@app.websocket("/intensity-stream")
+async def intensity_websocket(websocket: WebSocket, serial: str):
+    await websocket.accept()
+    frames = camera_utils.get_intensity_frames(serial)
+    for frame in frames:
+        frame_bytes = frame.to_bytes()
+        await websocket.send_bytes(frame_bytes)
+
+# Endpoint to stream XYZ point cloud
+@app.websocket("/xyz-stream")
+async def xyz_websocket(websocket: WebSocket, serial: str):
+    await websocket.accept()
+    frames = camera_utils.get_xyz_frames(serial)
+    for frame in frames:
+        frame_bytes = frame.to_bytes()
+        await websocket.send_bytes(frame_bytes)
+
 
 
 if __name__ == "__main__":
