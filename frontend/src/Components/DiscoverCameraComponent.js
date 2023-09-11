@@ -95,7 +95,7 @@ export default function DiscoverCameraComponent() {
           style={{
             width: '100%',
           }}
-          options={camerasList}
+          options={setCameras}
           onChange={handleCameraChange}
           value={selectedCamera}
         />
