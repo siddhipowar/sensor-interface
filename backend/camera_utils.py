@@ -11,7 +11,6 @@ streamingCameraList = []
 #discover list of cameras available to connect
 async def get_cameras():
     # shows a list of available cameras to connect to
-    print("entered")
     cameras = tof.discoverKeaCameras()
     camera_list = []
     print(cameras)
@@ -30,7 +29,7 @@ async def start_streaming(serial:str):
     cam = tof.KeaCamera(serial=serial)
     types = [tof.FrameType.INTENSITY, tof.FrameType.XYZ]
     tof.selectStreams(cam, types)
-    streamingCameraList.append(CameraManager(serial))
+    # streamingCameraList.append(CameraManager(serial))
     cam.start()
     print(cam.isStreaming(), "hello")
 
