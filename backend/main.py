@@ -1,4 +1,4 @@
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, WebSocket, Request
 from models.camera_settings_model import camera_settings
 import uvicorn
 import camera_utils
@@ -26,7 +26,9 @@ async def get_discovered_cameras():
 
 # connect to the camera selected. Pass camera serial number as API query parameter
 @app.post("/connect-to-camera")  
-async def connectToCamera(serial: str):
+async def connectToCamera(request: Request):
+    data = await request.json()
+    serial = data.get('serial')
     print(serial)
     await camera_utils.start_streaming(serial)
     return {"message": "connected to the camera"}
