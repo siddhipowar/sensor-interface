@@ -2,6 +2,7 @@ import { Button , Modal, Select} from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import React, { useEffect , useState} from 'react';
 import axios from 'axios';
+import '../CSS/Modal.css'
 
 const DiscoverCamModal = ({open, onClose}) => {
     const [cameras, setCameras] = useState([]); //state to store cameras
@@ -40,26 +41,28 @@ const DiscoverCamModal = ({open, onClose}) => {
     if (!open) return null
 
     return(
-        <Modal title="Discovered cameras" onCancel={onClose}>
-            <div className="modalContainer">
-                {/* <h4>Discovered Cameras:</h4> */}
+        <div title="Discovered cameras" onCancel={onClose}>
+            <div className="modal-content">
+                <div>
+                    <h5>Discovered Cameras:</h5>
+                </div>
                 <div>
                     <CloseOutlined onClick={onClose} className='closeBtn'/>
                 </div>
-                <div>
+                <div className='select-container'>
                     <Select placeholder="Select a camera" style={{ width: '100%' }} onChange={(value) => setSelectedCamera(value)}>
                         {cameras.map((camera) => (
                         <Select.Option key={camera.cam_serial} value={camera.cam_serial}>
-                            {camera.cam_info}
+                            {camera.cam_serial}
                         </Select.Option>
                         ))}
                     </Select>
                 </div>
-                <div style={{paddingLeft:90}}>
+                <div className='connect-button'>
                     <Button type='primary' style={{marginRight:20}} onClick={handleConnect}>Connect</Button>
                 </div>
             </div>
-        </Modal>
+        </div>
     );
 };
 

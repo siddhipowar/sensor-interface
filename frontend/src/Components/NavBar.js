@@ -1,7 +1,7 @@
 import React from 'react';
 //import './Navbar.css'; // You can create a separate CSS file for styling
 // import Logo from '../../public/quanergy.jpg'; // Import your logo image
-import '../App.css'
+import '../CSS/Navbar.css'
 
 function Navbar() {
     return (
