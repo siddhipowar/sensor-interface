@@ -7,20 +7,21 @@ import '../CSS/StreamOptionModal.css'
 const StreamOptionModal = ({open, onClose}) => {
     if (!open) return null;
 
+    // function for checkbox selection
     const onChange = (e) => {
         console.log('checked = ${e.target.checked}');
     };
 
-    return(
+    return (
         <>
         <div className='stream-modal-content'>
             <div>
-                <h5>Stream</h5>
+                <h4>Stream</h4>
             </div>
-            <div>
+            <div className='close-button'>
                 <CloseOutlined onClick={onClose}></CloseOutlined>
             </div>
-            <div>
+            <div style={{marginTop:10}}>
                 <Checkbox onChange={onChange}>Point Cloud</Checkbox>
                 <Checkbox onChange={onChange}>Intensity</Checkbox>
             </div>

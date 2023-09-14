@@ -52,7 +52,7 @@ const DiscoverCamModal = ({open, onClose, onConnect}) => {
                 <div>
                     <CloseOutlined onClick={onClose} className='closeBtn'/>
                 </div>
-                <div className='select-container'>
+                <div style={{marginTop:20}} className='select-container'>
                     <Select placeholder="Select a camera" style={{ width: '100%' }} onChange={(value) => setSelectedCamera(value)}>
                         {cameras.map((camera) => (
                         <Select.Option key={camera.cam_serial} value={camera.cam_serial}>
