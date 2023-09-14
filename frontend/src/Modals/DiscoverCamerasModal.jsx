@@ -1,13 +1,14 @@
-import { Button , Modal, Select} from 'antd';
+import { Button , Select, message} from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import React, { useEffect , useState} from 'react';
 import axios from 'axios';
 import '../CSS/Modal.css'
 
-const DiscoverCamModal = ({open, onClose}) => {
+const DiscoverCamModal = ({open, onClose, onConnect}) => {
     const [cameras, setCameras] = useState([]); //state to store cameras
     const [selectedCamera, setSelectedCamera] = useState(null);
-
+    // const [OpenStreamOptionModal, setOpenStreamOptionModal] = useState(false);
+    
     useEffect(() => {
         if (open) {
             // Fetch the list of cameras when the modal in open
@@ -18,6 +19,7 @@ const DiscoverCamModal = ({open, onClose}) => {
             )
             .catch((error) => {
                 console.error('Error fetching cameras', error);
+                message.error('Another application has exclusive access');
             }
             );
         }
@@ -29,6 +31,7 @@ const DiscoverCamModal = ({open, onClose}) => {
             .post('http://localhost:8001/connect-to-camera', {serial: selectedCamera})
             .then((response) => {
                 console.log(response.data.message);
+                onConnect();
             }
             )
             .catch((error) => {

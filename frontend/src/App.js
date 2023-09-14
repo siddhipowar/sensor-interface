@@ -1,17 +1,41 @@
 import React, {useState} from 'react';
-import DiscoverCameraComponent from './Components/DiscoverCameraComponent';
 import Navbar from './Components/NavBar';
 import DiscoverCamModal from './Modals/DiscoverCamerasModal'
-import { Button } from 'antd';
+import StreamOptionModal from './Modals/StreamOptionModal'
+import { Button, message } from 'antd';
 
 const App = () => {
-    const [OpenModal, setOpenModal] = useState(false)
+    const [OpenDiscoverCamModal, setOpenDiscoverCamModal] = useState(false)
+    const [OpenStreamOptionModal, setStreamOptionModal] = useState(false)
+    const [openFindCamButton, setFindCamButton] = useState(false)
+
+    const handleDiscoverCamConnect = () => {
+        setOpenDiscoverCamModal(false);
+        setStreamOptionModal(true);
+    }
+
+    //function to display the find camera button after closing the stream option window
+    const handleStreamDisconnect = () => {
+        setFindCamButton(true);
+        setStreamOptionModal(false);
+    }
+
     return (
         <>
+
         <Navbar/>
-        {/* <DiscoverCameraComponent/> */}
-        <Button onClick={() => setOpenModal(true)} style={{marginTop:"20px"}}>Find Cameras</Button>
-        <DiscoverCamModal open={OpenModal} onClose={() => setOpenModal(false)}></DiscoverCamModal>
+        { !OpenStreamOptionModal ? 
+        <Button open={openFindCamButton} onClick={() => setOpenDiscoverCamModal(true)} style={{marginTop:"20px", marginLeft:"10px"}}>Find Cameras</Button> 
+        : null}
+
+        {OpenDiscoverCamModal ? 
+        <DiscoverCamModal open={OpenDiscoverCamModal} onClose={() => setOpenDiscoverCamModal(false)} onConnect = {handleDiscoverCamConnect}></DiscoverCamModal> 
+        : null}
+
+        {OpenStreamOptionModal ? 
+        <StreamOptionModal open={OpenStreamOptionModal} onClose={handleStreamDisconnect}></StreamOptionModal> 
+        : null}
+
         </>
     );
 }
