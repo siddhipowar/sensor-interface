@@ -2,6 +2,7 @@
 import { Checkbox } from 'antd';
 import React from 'react';
 import { CloseOutlined } from '@ant-design/icons';
+import '../CSS/StreamOptionModal.css'
 
 const StreamOptionModal = ({open, onClose}) => {
     if (!open) return null;
@@ -12,7 +13,7 @@ const StreamOptionModal = ({open, onClose}) => {
 
     return(
         <>
-        <div>
+        <div className='stream-modal-content'>
             <div>
                 <h5>Stream</h5>
             </div>

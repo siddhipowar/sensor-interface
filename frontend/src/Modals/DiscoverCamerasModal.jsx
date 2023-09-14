@@ -2,7 +2,7 @@ import { Button , Select, message} from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import React, { useEffect , useState} from 'react';
 import axios from 'axios';
-import '../CSS/Modal.css'
+import '../CSS/DiscoverCamModal.css'
 
 const DiscoverCamModal = ({open, onClose, onConnect}) => {
     const [cameras, setCameras] = useState([]); //state to store cameras

@@ -1,0 +1,9 @@
+.stream-modal-content {
+    background-color: #fff;
+    max-width: 200px;
+    left: 30px; /* Adjust the left position as needed */
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    position: absolute; /* Use absolute positioning to position it relative to the screen */
+    border-radius: 5px;
+}
