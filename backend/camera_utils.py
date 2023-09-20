@@ -57,13 +57,15 @@ async def get_intensity_frames(serial:str) -> list:
     return frames
 
 # Gets frames of frame type XYZ         
-async def get_xyz_frames(serial:str) -> list:
-    frames = []
+async def get_xyz_frames(serial:str) -> list: 
+    frames = None
     types = [tof.FrameType.XYZ]
     cam = tof.KeaCamera(serial=serial)
     tof.selectStreams(cam, types)
-    while cam.isStreaming():
-        frames = cam.getFrames
+    # while cam.isStreaming():
+    for _ in range(20):
+        frames = cam.getFrames()
+        print(frames)
     return frames
 
 

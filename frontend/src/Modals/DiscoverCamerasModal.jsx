@@ -44,28 +44,28 @@ const DiscoverCamModal = ({open, onClose, onConnect}) => {
     if (!open) return null
 
     return(
-        <div title="Discovered cameras" onCancel={onClose}>
-            <div className="modal-content">
-                <div>
-                    <h5>Discovered Cameras:</h5>
-                </div>
-                <div>
-                    <CloseOutlined onClick={onClose} className='closeBtn'/>
-                </div>
-                <div style={{marginTop:20}} className='select-container'>
-                    <Select placeholder="Select a camera" style={{ width: '100%' }} onChange={(value) => setSelectedCamera(value)}>
-                        {cameras.map((camera) => (
-                        <Select.Option key={camera.cam_serial} value={camera.cam_serial}>
-                            {camera.cam_serial}
-                        </Select.Option>
-                        ))}
-                    </Select>
-                </div>
-                <div className='connect-button'>
-                    <Button type='primary' style={{marginRight:20}} onClick={handleConnect}>Connect</Button>
-                </div>
+        
+        <div className="modal-content">
+            <div>
+                <h5>Discovered Cameras:</h5>
+            </div>
+            <div>
+                <CloseOutlined onClick={onClose} className='closeBtn'/>
+            </div>
+            <div style={{marginTop:20}} className='select-container'>
+                <Select placeholder="Select a camera" style={{ width: '100%' }} onChange={(value) => setSelectedCamera(value)}>
+                    {cameras.map((camera) => (
+                    <Select.Option key={camera.cam_serial} value={camera.cam_serial}>
+                        {camera.cam_serial}
+                    </Select.Option>
+                    ))}
+                </Select>
+            </div>
+            <div className='connect-button'>
+                <Button type='primary' style={{marginRight:20}} onClick={handleConnect}>Connect</Button>
             </div>
         </div>
+    
     );
 };
 

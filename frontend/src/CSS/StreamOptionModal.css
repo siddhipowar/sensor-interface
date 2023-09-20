@@ -18,3 +18,8 @@
     cursor: pointer;
     font-size: 12px;
   }
+
+.btn {
+    margin-top: 30;
+    margin-left: 30;
+}
