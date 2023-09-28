@@ -40,6 +40,7 @@ const App = () => {
         <>
 
         <Navbar/>
+        
         { !OpenStreamOptionModal ? 
         <Button open={openFindCamButton} onClick={() => setOpenDiscoverCamModal(true)} style={{marginTop:"20px", marginLeft:"10px"}}>Find Cameras</Button> 
         : null}
