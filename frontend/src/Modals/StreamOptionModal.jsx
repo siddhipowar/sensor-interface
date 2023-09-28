@@ -4,7 +4,7 @@ import React, { useState} from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import '../CSS/StreamOptionModal.css'
 
-const StreamOptionModal = ({open, onClose}) => {
+const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
 
     // useState to store selection from the checkbox
     const [selectedOptions, setSelectedOptions] = useState({
@@ -22,8 +22,8 @@ const StreamOptionModal = ({open, onClose}) => {
     const onChange = (e) => {
         const { name, checked } = e.target;
         setSelectedOptions ({
-            ...setSelectedOptions
-            [name].checked,
+            ...setSelectedOptions,
+            [name]: checked,
         });
         console.log(`checked = ${checked}`);
     };
@@ -72,6 +72,10 @@ const StreamOptionModal = ({open, onClose}) => {
             intensitySocket.close();
         }
     };
+    
+    const handleCamSettings = () => {
+        onCamSettingChange();
+    };
 
     return (
         <>
@@ -84,11 +88,19 @@ const StreamOptionModal = ({open, onClose}) => {
             </div>
             <div style={{marginTop:10}}>
                 <Checkbox onChange={onChange}>Point Cloud</Checkbox>
+            </div>
+            <div>
                 <Checkbox onChange={onChange}>Intensity</Checkbox>
+            </div>
+            <div>
+                <Checkbox onChange={onChange}>Depth</Checkbox>
             </div>
             <div className='btn'>
                 <Button  type='primary' onClick={startStreaming}>Start</Button>
-                <Button style={{ marginLeft: '10px', marginTop: '20px'}} onClick={stopStreaming}>Stop</Button>
+                <Button style={{ marginLeft: '10px', marginTop: '20px'}} onClick={stopStreaming} danger>Stop</Button>
+            </div>
+            <div>
+                <Button type='primary' style={{marginTop:'20px'}} onClick={handleCamSettings}>Change camera settings</Button>
             </div>
             
         </div>

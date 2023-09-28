@@ -2,12 +2,14 @@ import React, {useState} from 'react';
 import Navbar from './Components/NavBar';
 import DiscoverCamModal from './Modals/DiscoverCamerasModal'
 import StreamOptionModal from './Modals/StreamOptionModal'
+import CameraSettingsModal from './Modals/CameraSettingsModal'
 import { Button, message } from 'antd';
 
 const App = () => {
     const [OpenDiscoverCamModal, setOpenDiscoverCamModal] = useState(false)
     const [OpenStreamOptionModal, setStreamOptionModal] = useState(false)
     const [openFindCamButton, setFindCamButton] = useState(false)
+    const [openCameraSettingsModal, setCameraSettingsModal] = useState(false)
 
     const handleDiscoverCamConnect = () => {
         setOpenDiscoverCamModal(false);
@@ -18,6 +20,20 @@ const App = () => {
     const handleStreamDisconnect = () => {
         setFindCamButton(true);
         setStreamOptionModal(false);
+    }
+
+    const handleCamSettings = () => {
+        setCameraSettingsModal(true);
+    }
+
+    // seems repeated but might need modification later
+    const handleCamSettingsSet = () => {
+        setCameraSettingsModal(false);
+    }
+
+    // seems repeated but might need modification later
+    const handleCamSettingsClose = () => {
+        setCameraSettingsModal(false);
     }
 
     return (
@@ -33,7 +49,11 @@ const App = () => {
         : null}
 
         {OpenStreamOptionModal ? 
-        <StreamOptionModal open={OpenStreamOptionModal} onClose={handleStreamDisconnect}></StreamOptionModal> 
+        <StreamOptionModal open={OpenStreamOptionModal} onClose={handleStreamDisconnect} onCamSettingChange={handleCamSettings}></StreamOptionModal> 
+        : null}
+
+        {OpenStreamOptionModal ? 
+        <CameraSettingsModal open={openCameraSettingsModal} onSet={handleCamSettingsSet} onClose={handleCamSettingsClose}></CameraSettingsModal> 
         : null}
 
         </>
