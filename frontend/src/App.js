@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Navbar from './Components/NavBar';
 import DiscoverCamModal from './Modals/DiscoverCamerasModal'
 import StreamOptionModal from './Modals/StreamOptionModal'
@@ -20,6 +20,7 @@ const App = () => {
     const handleStreamDisconnect = () => {
         setFindCamButton(true);
         setStreamOptionModal(false);
+        disconnectFromCamera();
     }
 
     const handleCamSettings = () => {
@@ -35,6 +36,26 @@ const App = () => {
     const handleCamSettingsClose = () => {
         setCameraSettingsModal(false);
     }
+
+    const disconnectFromCamera = async () => {
+        try {
+            const response = await fetch('http://localhost:8001/disconnect-camera', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data.message);
+            }
+            else {
+                console.error('Failed to disconnect from the camera');
+            }
+        } catch (error) {
+            console.error('An error occurred', error);
+        }
+    };
 
     return (
         <>

@@ -37,6 +37,11 @@ async def connectToCamera(request: Request):
     # await camera_utils.start_streaming(serial)
     return {"message": "connected to the camera"}
 
+@app.post("/disconnect-camera")
+async def disconnectFromCamera():
+    cm.DisconnectCamera()
+    return {"message": "Camera disconnected"}
+    
 # stop streaming from the camera
 # @app.post("/stop-camera-stream")  
 # async def stopCameraStream(serial: str):

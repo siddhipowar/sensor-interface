@@ -11,6 +11,9 @@ class CameraManager:
     def connectCamera(self, serial):
         self.cam = tof.KeaCamera(serial=serial)
 
+    def DisconnectCamera(self):
+        self.cam = None
+
     #discover list of cameras available to connect
     async def get_cameras(self):
         # shows a list of available cameras to connect to
