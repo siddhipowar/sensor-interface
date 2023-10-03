@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import Navbar from './Components/NavBar';
 import DiscoverCamModal from './Modals/DiscoverCamerasModal'
 import StreamOptionModal from './Modals/StreamOptionModal'
@@ -37,6 +37,7 @@ const App = () => {
         setCameraSettingsModal(false);
     }
 
+    // Function to disconnect from camera when stream option modal is closed
     const disconnectFromCamera = async () => {
         try {
             const response = await fetch('http://localhost:8001/disconnect-camera', {
