@@ -31,10 +31,17 @@ class CameraManager:
             return []
     
     # connects to the selected camera and starts streaming    
-    async def start_streaming(self):
+    async def start_streaming(self, pc: bool, intensity: bool):
         # cm = CameraManager(serial)
         # cam = tof.KeaCamera(serial=serial)
-        types = [tof.FrameType.INTENSITY, tof.FrameType.XYZ]
+        if pc:
+            types = [tof.FrameType.XYZ]
+        elif intensity:
+            types = types = [tof.FrameType.INTENSITY]
+        else:
+            types = types = [tof.FrameType.INTENSITY, tof.FrameType.XYZ]
+        
+        
         if self.cam:
             tof.selectStreams(self.cam, types)
             # streamingCameraList.append(CameraManager(serial))
@@ -65,13 +72,11 @@ class CameraManager:
                 frames = self.cam.getFrames()
             return frames
 
-    # Gets frames of frame type XYZ         
+    # Gets frame of frame type XYZ         
     async def get_xyz_frames(self, serial: str) -> list: 
-        types = [tof.FrameType.XYZ]
         if self.cam and self.cam.getSerial() == serial:
-            tof.selectStreams(self.cam, types)
+            # getFrames() returns one frame so the variable XYZframe will have one frame stored in this function
             XYZframe = self.cam.getFrames()
-            print(XYZframe)
             return XYZframe
 
 
