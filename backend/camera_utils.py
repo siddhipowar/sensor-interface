@@ -46,7 +46,7 @@ class CameraManager:
             tof.selectStreams(self.cam, types)
             # streamingCameraList.append(CameraManager(serial))
             self.cam.start()
-            print(self.cam.isStreaming(), "The camera is streaming")
+            print(self.cam.isStreaming(), f"Hi it's {self.cam.getSerial()}")
 
 # # connects to the selected camera and stops streaming
 # async def stop_streaming(serial:str):
@@ -60,6 +60,12 @@ class CameraManager:
 #     #print(cam.isStreaming())
 #     # if cam.isConnected():
 #     #     cam.stop()
+
+
+    # Set the camera configurations
+    async def camera_configuration(self, settings: camera_settings):
+        user_config = tof.UserConfig()
+
 
     # Gets frames of frame type intensity
     async def get_intensity_frames(self, serial:str) -> list:
