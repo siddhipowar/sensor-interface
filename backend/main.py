@@ -65,12 +65,13 @@ async def intensity_websocket(websocket: WebSocket, serial: str):
         await websocket.send_bytes(frame_bytes)
 
 # Endpoint to stream XYZ point cloud
-@app.websocket("/pointcloud-stream")
+@app.websocket("/pointcloud-stream/{serial}")
 async def xyz_websocket(websocket: WebSocket, serial: str):
     print("Entered Api")
     await websocket.accept()
+    cm.connectCamera(serial)
     print(cm.cam.getSerial())
-    await cm.start_streaming()
+    await cm.start_streaming(True, True)
     frame = await cm.get_xyz_frames(serial)
     frame_array = np.asarray(frame)
     frame_bytes = frame_array.tobytes()
