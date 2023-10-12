@@ -4,7 +4,7 @@ import React, { useState} from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import '../CSS/StreamOptionModal.css'
 
-const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
+const StreamOptionModal = ({open, onClose, onCamSettingChange, setXYZBinaryData}) => {
 
     // useState to store selection from the checkbox
     const [selectedOptions, setSelectedOptions] = useState({
@@ -22,9 +22,10 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
     const onChange = (e) => {
         const { name, checked } = e.target;
         setSelectedOptions ({
-            ...setSelectedOptions,
-            [name]: checked,
+            ...selectedOptions,
+        [name]: checked,
         });
+        console.log(selectedOptions)
         console.log(`checked = ${checked}`);
     };
 
@@ -38,8 +39,25 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
         });
 
         socket.addEventListener('message', (event) => {
-            console.log('Message received from the server:', event.data);
+            const messageData = event.data;
+          
+            if (messageData instanceof Blob) {
+              const reader = new FileReader();
+          
+              reader.onload = (event) => {
+                const binaryData = event.target.result; // This will contain the binary data
+                console.log('Received binary data:', binaryData);
+                setXYZBinaryData(binaryData);
+                // Here you can process or render the binary data as needed.
+              };
+          
+              reader.readAsArrayBuffer(messageData);
+            } else {
+              // Handle other data types if needed
+              console.log('Received data of unknown type:', messageData);
+            }
         });
+          
 
         socket.addEventListener('close', (event) => {
             console.log('WebSocket connection closed:', event);
@@ -56,6 +74,7 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
     const startStreaming = () => {
         if (selectedOptions.pointCloud) {
             setPointCloudSocket(connectWebSocket("pointcloud-stream"));
+
         }
         if (selectedOptions.intensity) {
             setIntensitySocket(connectWebSocket("intensity-stream"));
@@ -87,13 +106,13 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
                 <CloseOutlined onClick={onClose}></CloseOutlined>
             </div>
             <div style={{marginTop:10}}>
-                <Checkbox onChange={onChange}>Point Cloud</Checkbox>
+                <Checkbox name={"pointCloud"} onChange={onChange}>Point Cloud</Checkbox>
             </div>
             <div>
-                <Checkbox onChange={onChange}>Intensity</Checkbox>
+                <Checkbox name={"intensity"} onChange={onChange}>Intensity</Checkbox>
             </div>
             <div>
-                <Checkbox onChange={onChange}>Depth</Checkbox>
+                <Checkbox name={"depth"} onChange={onChange}>Depth</Checkbox>
             </div>
             <div className='btn'>
                 <Button  type='primary' onClick={startStreaming}>Start</Button>
