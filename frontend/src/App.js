@@ -12,6 +12,7 @@ const App = () => {
     const [openFindCamButton, setFindCamButton] = useState(false)
     const [openCameraSettingsModal, setCameraSettingsModal] = useState(false)
     const [XYZBinaryData, setXYZBinaryData] = useState([])
+    const [imageData, setFrameData] = useState(null);
 
 
     const handleDiscoverCamConnect = () => {
@@ -39,6 +40,13 @@ const App = () => {
     const handleCamSettingsClose = () => {
         setCameraSettingsModal(false);
     }
+
+    const handleFrameData = (frameData) => {
+        console.log("sdasdsadsf", frameData)
+        setFrameData(frameData)
+        // Process or display the frame data here
+    };
+     
 
     // Function to disconnect from camera when stream option modal is closed
     const disconnectFromCamera = async () => {
@@ -75,9 +83,9 @@ const App = () => {
         : null}
 
         {OpenStreamOptionModal ? 
-        <StreamOptionModal open={OpenStreamOptionModal} onClose={handleStreamDisconnect} onCamSettingChange={handleCamSettings} setXYZBinaryData={setXYZBinaryData}></StreamOptionModal> 
+        <StreamOptionModal open={OpenStreamOptionModal} onClose={handleStreamDisconnect} onCamSettingChange={handleCamSettings} onFrameDataReceived={handleFrameData}></StreamOptionModal> 
         : null}
-
+        
         {OpenStreamOptionModal ? 
         <CameraSettingsModal open={openCameraSettingsModal} onSet={handleCamSettingsSet} onClose={handleCamSettingsClose}></CameraSettingsModal> 
         : null}
@@ -85,6 +93,9 @@ const App = () => {
         {XYZBinaryData.length ? 
         <PointCloudRenderer binaryData={XYZBinaryData} />
         : null }
+
+      
+
 
         </>
     );

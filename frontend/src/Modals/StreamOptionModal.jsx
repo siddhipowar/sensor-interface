@@ -4,7 +4,7 @@ import React, { useState} from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import '../CSS/StreamOptionModal.css'
 
-const StreamOptionModal = ({open, onClose, onCamSettingChange, setXYZBinaryData}) => {
+const StreamOptionModal = ({open, onClose, onCamSettingChange, onFrameDataReceived}) => {
 
     // useState to store selection from the checkbox
     const [selectedOptions, setSelectedOptions] = useState({
@@ -15,6 +15,7 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange, setXYZBinaryData}
     //state to store WebSocket connections
     const [pointCloudSocket, setPointCloudSocket] = useState(null);
     const [intensitySocket, setIntensitySocket] = useState(null);
+    const [imageData, setFrameData] = useState(null);
 
     if (!open) return null;
 
@@ -45,10 +46,20 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange, setXYZBinaryData}
               const reader = new FileReader();
           
               reader.onload = (event) => {
-                const binaryData = event.target.result; // This will contain the binary data
-                console.log('Received binary data:', binaryData);
-                setXYZBinaryData(binaryData);
+                // const binaryData = event.target.result; // This will contain the binary data
+                // console.log('Received binary data:', binaryData);
+                // onFrameDataReceived(binaryData);
                 // Here you can process or render the binary data as needed.
+                function blobToDataURL(blob) {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(blob);
+                    return reader.result;
+                }
+                console.log(event)
+                const blob = new Blob([event.target.result], { type: 'image/jpeg' });
+                let data = blobToDataURL(blob)
+                console.log(data)
+                setFrameData(data);
               };
           
               reader.readAsArrayBuffer(messageData);
@@ -121,7 +132,9 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange, setXYZBinaryData}
             <div>
                 <Button type='primary' style={{marginTop:'20px'}} onClick={handleCamSettings}>Change camera settings</Button>
             </div>
-            
+            <div>
+            {imageData && <img src={imageData} alt="Received Image" />}
+            </div>
         </div>
         </>
     );
