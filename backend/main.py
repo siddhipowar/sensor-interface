@@ -97,7 +97,7 @@ async def xyz_websocket(websocket: WebSocket, serial: str):
     # print(frame_array.shape)
     # frame_bytes = frame_array.tobytes()
     # print(len(frame_bytes))
-    await websocket.send_bytes(image_data.tobytes())
+    await websocket.send_bytes(image_data)
 
 
 if __name__ == "__main__":
