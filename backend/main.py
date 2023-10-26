@@ -73,12 +73,13 @@ async def xyz_websocket(websocket: WebSocket, serial: str):
     print("Entered Api")
     await websocket.accept()
     # cm.connectCamera(serial)s
-    print(cm.cam.getSerial())
+    
     await cm.start_streaming(True, True)
     frame = await cm.get_xyz_frames(serial)
     
     frame_array = np.asarray(frame)
     print(frame_array)
+   
     image = frame_array[0, :, :, :3]
     print(image)
     img_converted = (image * 255).clip(0, 255).astype(np.uint8)
