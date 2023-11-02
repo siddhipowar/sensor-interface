@@ -89,11 +89,11 @@ const App = () => {
         <CameraSettingsModal open={openCameraSettingsModal} onSet={handleCamSettingsSet} onClose={handleCamSettingsClose}></CameraSettingsModal> 
         : null}
 
-        {XYZBinaryData.length ? 
+        {/* {XYZBinaryData.length ? 
         <PointCloudRenderer binaryData={XYZBinaryData} />
-        : null }
+        : null } */}
 
-      
+        {/* <PointCloudRenderer/> */}
 
 
         </>
