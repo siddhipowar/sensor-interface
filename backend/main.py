@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
+import json
 
 app = FastAPI()
 
@@ -78,27 +79,27 @@ async def xyz_websocket(websocket: WebSocket, serial: str):
     frame = await cm.get_xyz_frames(serial)
     
     frame_array = np.asarray(frame)
-    print(frame_array)
+    # print(frame_array)
+    frame_list = frame_array.tolist()
+    print(frame_list)
+
+    frame_json = json.dumps(frame_array.tolist())
+    # print(frame_list)
+
+
+    # image = frame_array[0, :, :, :3]
+    # print(image)
+    # img_converted = (image * 255).clip(0, 255).astype(np.uint8)
+    # pillow_image = Image.fromarray(img_converted)
+    # pillow_image = pillow_image.transpose(Image.FLIP_TOP_BOTTOM)
+    # pillow_image = pillow_image.transpose(Image.FLIP_LEFT_RIGHT)
+    # pillow_image.save("output_image.png")
+    # pillow_image.show()
+    # with open("output_image.png", "rb") as image_file:
+    #     image_data = image_file.read()
+    #     print(image_data)
    
-    image = frame_array[0, :, :, :3]
-    print(image)
-    img_converted = (image * 255).clip(0, 255).astype(np.uint8)
-    pillow_image = Image.fromarray(img_converted)
-    pillow_image = pillow_image.transpose(Image.FLIP_TOP_BOTTOM)
-    pillow_image = pillow_image.transpose(Image.FLIP_LEFT_RIGHT)
-    # Now you can save, display, or manipulate the 'pillow_image' as needed
-    pillow_image.save("output_image.png")
-    pillow_image.show()
-    with open("output_image.png", "rb") as image_file:
-        # Read the image data
-        image_data = image_file.read()
-        print(image_data)
-    # Send the image data as binary
-    # await websocket.send(image_data)
-    # print(frame_array.shape)
-    # frame_bytes = frame_array.tobytes()
-    # print(len(frame_bytes))
-    await websocket.send_bytes(image_data)
+    await websocket.send_text(frame_json)
 
 
 if __name__ == "__main__":
