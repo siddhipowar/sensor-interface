@@ -12,6 +12,7 @@ const App = () => {
     const [OpenStreamOptionModal, setStreamOptionModal] = useState(false)
     const [openFindCamButton, setFindCamButton] = useState(false)
     const [openCameraSettingsModal, setCameraSettingsModal] = useState(false)
+    const [openPointCloudModal, setPointCloudModal] = useState(false)
     const [XYZBinaryData, setXYZBinaryData] = useState([])
     const [imageData, setFrameData] = useState(null);
 
@@ -35,6 +36,7 @@ const App = () => {
     // seems repeated but might need modification later
     const handleCamSettingsSet = () => {
         setCameraSettingsModal(false);
+        setPointCloudModal(true);
     }
 
     // seems repeated but might need modification later
@@ -93,7 +95,9 @@ const App = () => {
         <PointCloudRenderer binaryData={XYZBinaryData} />
         : null } */}
 
-        {/* <PointCloudRenderer/> */}
+        {openPointCloudModal ? 
+        <PointCloudRenderer open={openPointCloudModal}></PointCloudRenderer> 
+        : null}
 
 
         </>

@@ -19,7 +19,7 @@ const PointCloudViewer = () => {
     const handleSocketMessage = (event) => {
       const frameData = JSON.parse(event.data);
 
-      const pointsGeometry = new THREE.Geometry(); // Create a new THREE.Geometry
+      const pointsGeometry = new THREE.BufferGeometry(); // Create a new BufferGeometry
       frameData.forEach((point) => {
         pointsGeometry.vertices.push(new THREE.Vector3(point[0], point[1], point[2]));
       });
