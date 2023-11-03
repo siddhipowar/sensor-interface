@@ -3,6 +3,7 @@ import { Checkbox, Button } from 'antd';
 import React, { useState} from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import '../CSS/StreamOptionModal.css'
+import axios from 'axios';
 
 const StreamOptionModal = ({open, onClose, onCamSettingChange, onFrameDataReceived}) => {
 
@@ -96,10 +97,12 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange, onFrameDataReceiv
     const stopStreaming = () => {
         if (pointCloudSocket) {
             pointCloudSocket.close();
+            axios.post('http://localhost:8001/stop-stream');
         }
 
         if (intensitySocket) {
             intensitySocket.close();
+            axios.post('http://localhost:8001/stop-stream');
         }
     };
     

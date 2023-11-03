@@ -101,6 +101,9 @@ async def xyz_websocket(websocket: WebSocket, serial: str):
    
     await websocket.send_text(frame_json)
 
+@app.post("/stop-stream")
+async def stop_stream():
+    await cm.stop_streaming()
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8001)

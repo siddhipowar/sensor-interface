@@ -48,19 +48,10 @@ class CameraManager:
             self.cam.start()
             print(self.cam.isStreaming(), f"Hi it's {self.cam.getSerial()}")
 
-# # connects to the selected camera and stops streaming
-# async def stop_streaming(serial:str):
-#     # if serial in streamingCameraList:
-#     if len(streamingCameraList):
-#         for i in streamingCameraList:
-#             if i.cam.getSerial() == serial:
-#                 print(i.cam.isStreaming())
-#                 print(i.cam.getStreamList())
-#                 print(i.cam.getSerial())
-#     #print(cam.isStreaming())
-#     # if cam.isConnected():
-#     #     cam.stop()
-
+    # stops streaming from the camera
+    async def stop_streaming(self):
+        self.cam.stop()
+    
 
     # Set the camera configurations
     async def camera_configuration(self, settings: camera_settings):
