@@ -4,8 +4,9 @@ import React, { useState} from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import '../CSS/StreamOptionModal.css'
 import axios from 'axios';
+import PointCloudViewer from './PointCloudRenderer';
 
-const StreamOptionModal = ({open, onClose, onCamSettingChange, onFrameDataReceived}) => {
+const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
 
     // useState to store selection from the checkbox
     const [selectedOptions, setSelectedOptions] = useState({
@@ -17,6 +18,7 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange, onFrameDataReceiv
     const [pointCloudSocket, setPointCloudSocket] = useState(null);
     const [intensitySocket, setIntensitySocket] = useState(null);
     const [imageData, setFrameData] = useState(null);
+    const [isStreaming, setIsStreaming] = useState(false);
 
     if (!open) return null;
 
@@ -40,35 +42,35 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange, onFrameDataReceiv
             console.log('WebSocket connection opened:', event);
         });
 
-        socket.addEventListener('message', (event) => {
-            const messageData = event.data;
+        // socket.addEventListener('message', (event) => {
+        //     const messageData = event.data;
           
-            if (messageData instanceof Blob) {
-              const reader = new FileReader();
+        //     if (messageData instanceof Blob) {
+        //       const reader = new FileReader();
           
-              reader.onload = (event) => {
-                // const binaryData = event.target.result; // This will contain the binary data
-                // console.log('Received binary data:', binaryData);
-                // onFrameDataReceived(binaryData);
-                // Here you can process or render the binary data as needed.
-                function blobToDataURL(blob) {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(blob);
-                    return reader.result;
-                }
-                console.log(event)
-                const blob = new Blob([event.target.result], { type: 'image/jpeg' });
-                let data = blobToDataURL(blob)
-                console.log(data)
-                setFrameData(data);
-              };
+        //       reader.onload = (event) => {
+        //         // const binaryData = event.target.result; // This will contain the binary data
+        //         // console.log('Received binary data:', binaryData);
+        //         // onFrameDataReceived(binaryData);
+        //         // Here you can process or render the binary data as needed.
+        //         function blobToDataURL(blob) {
+        //             const reader = new FileReader();
+        //             reader.readAsDataURL(blob);
+        //             return reader.result;
+        //         }
+        //         console.log(event)
+        //         const blob = new Blob([event.target.result], { type: 'image/jpeg' });
+        //         let data = blobToDataURL(blob)
+        //         console.log(data)
+        //         setFrameData(data);
+        //       };
           
-              reader.readAsArrayBuffer(messageData);
-            } else {
-              // Handle other data types if needed
-              console.log('Received data of unknown type:', messageData);
-            }
-        });
+        //       reader.readAsArrayBuffer(messageData);
+        //     } else {
+        //       // Handle other data types if needed
+        //       console.log('Received data of unknown type:', messageData);
+        //     }
+        // });
           
 
         socket.addEventListener('close', (event) => {
@@ -91,19 +93,21 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange, onFrameDataReceiv
         if (selectedOptions.intensity) {
             setIntensitySocket(connectWebSocket("intensity-stream"));
         }
+        setIsStreaming(true);
     };
 
     // function to stop streaming and close the WebSocket connection
     const stopStreaming = () => {
         if (pointCloudSocket) {
             pointCloudSocket.close();
-            axios.post('http://localhost:8001/stop-stream');
         }
 
         if (intensitySocket) {
             intensitySocket.close();
-            axios.post('http://localhost:8001/stop-stream');
         }
+        axios.post('http://localhost:8001/stop-stream');
+
+        setIsStreaming(false);
     };
     
     const handleCamSettings = () => {
@@ -129,6 +133,7 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange, onFrameDataReceiv
                 <Checkbox name={"depth"} onChange={onChange}>Depth</Checkbox>
             </div>
             <div className='btn'>
+                
                 <Button  type='primary' onClick={startStreaming}>Start</Button>
                 <Button style={{ marginLeft: '10px', marginTop: '20px'}} onClick={stopStreaming} danger>Stop</Button>
             </div>

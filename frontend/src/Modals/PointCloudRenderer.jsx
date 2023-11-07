@@ -1,41 +1,37 @@
-import React, { useEffect, useRef } from 'react';
-import * as THREE from 'three'; // Import THREE
+import React, { useEffect, useRef, useState } from 'react';
+import * as THREE from 'three';
 import { Canvas, useThree } from 'react-three-fiber';
 
-const PointCloudViewer = () => {
-  const socket = useRef(null);
-
-  useEffect(() => {
-    socket.current = new WebSocket('ws://127.0.0.1:8001/pointcloud-stream/2020045');
-
-    return () => {
-      socket.current.close();
-    };
-  }, []);
-
+const PointCloudViewer = ({ socket }) => {
   const { scene } = useThree();
+  const [pointCloud, setPointCloud] = useState(null);
 
   useEffect(() => {
     const handleSocketMessage = (event) => {
       const frameData = JSON.parse(event.data);
 
-      const pointsGeometry = new THREE.BufferGeometry(); // Create a new BufferGeometry
+      const pointsGeometry = new THREE.BufferGeometry();
       frameData.forEach((point) => {
         pointsGeometry.vertices.push(new THREE.Vector3(point[0], point[1], point[2]));
       });
 
       const pointsMaterial = new THREE.PointsMaterial({ size: 0.05 });
-      const pointCloud = new THREE.Points(pointsGeometry, pointsMaterial);
+      const newPointCloud = new THREE.Points(pointsGeometry, pointsMaterial);
 
-      scene.add(pointCloud);
+      if (pointCloud) {
+        scene.remove(pointCloud); // Remove the previous point cloud
+      }
+
+      setPointCloud(newPointCloud);
+      scene.add(newPointCloud);
     };
 
-    socket.current.addEventListener('message', handleSocketMessage);
+    socket.addEventListener('message', handleSocketMessage);
 
     return () => {
-      socket.current.removeEventListener('message', handleSocketMessage);
+      socket.removeEventListener('message', handleSocketMessage);
     };
-  }, [scene]);
+  }, [scene, socket]);
 
   return (
     <Canvas camera={{ position: [0, 0, 5] }}>
