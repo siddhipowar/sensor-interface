@@ -3,7 +3,7 @@ import Navbar from './Components/NavBar';
 import DiscoverCamModal from './Modals/DiscoverCamerasModal'
 import StreamOptionModal from './Modals/StreamOptionModal'
 import CameraSettingsModal from './Modals/CameraSettingsModal'
-import PointCloudRenderer from './Modals/PointCloudRenderer';
+import PointCloudViewer from './Modals/PointCloudRenderer';
 import { Button, message } from 'antd';
 import axios from 'axios';
 
@@ -96,7 +96,7 @@ const App = () => {
         : null } */}
 
         {openPointCloudModal ? 
-        <PointCloudRenderer open={openPointCloudModal}></PointCloudRenderer> 
+        <PointCloudViewer open={openPointCloudModal} />
         : null}
 
 
