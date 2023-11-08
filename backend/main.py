@@ -73,19 +73,26 @@ async def intensity_websocket(websocket: WebSocket, serial: str):
 async def xyz_websocket(websocket: WebSocket, serial: str):
     print("Entered Api")
     await websocket.accept()
-    # cm.connectCamera(serial)s
     
-    await cm.start_streaming(True, True)
-    frame = await cm.get_xyz_frames(serial)
-    
-    frame_array = np.asarray(frame)
-    # print(frame_array)
-    frame_list = frame_array.tolist()
-    print(frame_list)
+    try:
+        await cm.start_streaming(True, False)
 
-    frame_json = json.dumps(frame_array.tolist())
-    # print(frame_list)
+        while cm.cam.isStreaming():
+            frame = await cm.get_xyz_frames(serial)
 
+            if not frame:
+                break
+
+            frame_array = np.asarray(frame)
+            frame_list = frame_array.tolist()
+            print(frame_list)
+
+            frame_json = json.dumps(frame_array.tolist())
+
+            await websocket.send_text(frame_json)
+
+    finally:
+        await websocket.close()
 
     # image = frame_array[0, :, :, :3]
     # print(image)
@@ -98,8 +105,6 @@ async def xyz_websocket(websocket: WebSocket, serial: str):
     # with open("output_image.png", "rb") as image_file:
     #     image_data = image_file.read()
     #     print(image_data)
-   
-    await websocket.send_text(frame_json)
 
 @app.post("/stop-stream")
 async def stop_stream():

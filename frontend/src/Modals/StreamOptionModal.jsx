@@ -4,9 +4,9 @@ import React, { useState} from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import '../CSS/StreamOptionModal.css'
 import axios from 'axios';
-import PointCloudViewer from './PointCloudRenderer';
+// import PointCloudViewer from './PointCloudRenderer';
 
-const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
+const StreamOptionModal = ({open, onClose, onCamSettingChange, onStreamStart}) => {
 
     // useState to store selection from the checkbox
     const [selectedOptions, setSelectedOptions] = useState({
@@ -40,6 +40,17 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
 
         socket.addEventListener('open', (event) => {
             console.log('WebSocket connection opened:', event);
+        });
+
+        socket.addEventListener('message', (event) => {
+            const messageData = event.data;
+
+            try {
+                const jsonData = JSON.parse(messageData);
+                console.log('Received data: ', jsonData);
+            } catch (error) {
+                console.error('Failed to parse received data', error);
+            }
         });
 
         // socket.addEventListener('message', (event) => {
@@ -84,9 +95,12 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
         return socket;
     };
 
+
+
     // function to start streaming based on selections
     const startStreaming = () => {
         if (selectedOptions.pointCloud) {
+            
             setPointCloudSocket(connectWebSocket("pointcloud-stream"));
 
         }
@@ -94,6 +108,7 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
             setIntensitySocket(connectWebSocket("intensity-stream"));
         }
         setIsStreaming(true);
+        onStreamStart();
     };
 
     // function to stop streaming and close the WebSocket connection
@@ -113,6 +128,7 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
     const handleCamSettings = () => {
         onCamSettingChange();
     };
+        
 
     return (
         <>
@@ -133,9 +149,17 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
                 <Checkbox name={"depth"} onChange={onChange}>Depth</Checkbox>
             </div>
             <div className='btn'>
-                
-                <Button  type='primary' onClick={startStreaming}>Start</Button>
-                <Button style={{ marginLeft: '10px', marginTop: '20px'}} onClick={stopStreaming} danger>Stop</Button>
+                {/* <Button  type='primary' onClick={startStreaming}>Start</Button>
+                <Button style={{ marginLeft: '10px', marginTop: '20px'}} onClick={stopStreaming} danger>Stop</Button> */}
+                {isStreaming ? (
+                    <Button style={{ marginLeft: '10px', marginTop: '20px'}} onClick={stopStreaming} danger>
+                        Stop
+                    </Button>
+                    ) : (
+                    <Button type="primary" onClick={startStreaming} >
+                        Start
+                    </Button>
+                )}
             </div>
             <div>
                 <Button type='primary' style={{marginTop:'20px'}} onClick={handleCamSettings}>Change camera settings</Button>
@@ -149,3 +173,4 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange}) => {
 };
 
 export default StreamOptionModal;
+

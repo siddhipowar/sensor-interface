@@ -3,7 +3,7 @@ import Navbar from './Components/NavBar';
 import DiscoverCamModal from './Modals/DiscoverCamerasModal'
 import StreamOptionModal from './Modals/StreamOptionModal'
 import CameraSettingsModal from './Modals/CameraSettingsModal'
-import PointCloudViewer from './Modals/PointCloudRenderer';
+// import PointCloudViewer from './Modals/PointCloudRenderer';
 import { Button, message } from 'antd';
 import axios from 'axios';
 
@@ -13,8 +13,10 @@ const App = () => {
     const [openFindCamButton, setFindCamButton] = useState(false)
     const [openCameraSettingsModal, setCameraSettingsModal] = useState(false)
     const [openPointCloudModal, setPointCloudModal] = useState(false)
-    const [XYZBinaryData, setXYZBinaryData] = useState([])
+    // const [XYZBinaryData, setXYZBinaryData] = useState([])
     const [imageData, setFrameData] = useState(null);
+    const [isStreaming, setIsStreaming] = useState(false);
+ 
 
 
     const handleDiscoverCamConnect = () => {
@@ -49,6 +51,10 @@ const App = () => {
         setFrameData(frameData)
         // Process or display the frame data here
     };
+
+    const handleStartStreaming = () => {
+        setIsStreaming(true);
+    }
      
 
     // Function to disconnect from camera when stream option modal is closed
@@ -84,21 +90,16 @@ const App = () => {
         : null}
 
         {OpenStreamOptionModal ? 
-        <StreamOptionModal open={OpenStreamOptionModal} onClose={handleStreamDisconnect} onCamSettingChange={handleCamSettings} onFrameDataReceived={handleFrameData}></StreamOptionModal> 
+        <StreamOptionModal open={OpenStreamOptionModal} onClose={handleStreamDisconnect} onCamSettingChange={handleCamSettings} onStreamStart={handleStartStreaming}></StreamOptionModal> 
         : null}
         
         {OpenStreamOptionModal ? 
         <CameraSettingsModal open={openCameraSettingsModal} onSet={handleCamSettingsSet} onClose={handleCamSettingsClose}></CameraSettingsModal> 
         : null}
 
-        {/* {XYZBinaryData.length ? 
-        <PointCloudRenderer binaryData={XYZBinaryData} />
+        {/* {isStreaming ? 
+        <PointCloudViewer/>
         : null } */}
-
-        {openPointCloudModal ? 
-        <PointCloudViewer open={openPointCloudModal} />
-        : null}
-
 
         </>
     );
