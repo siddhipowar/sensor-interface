@@ -4,7 +4,8 @@ import React, { useState} from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import '../CSS/StreamOptionModal.css'
 import axios from 'axios';
-// import PointCloudViewer from './PointCloudRenderer';
+import PointCloudViewer from './PointCloudRenderer';
+import {Canvas} from 'react-three-fiber';
 
 const StreamOptionModal = ({open, onClose, onCamSettingChange, onStreamStart}) => {
 
@@ -17,7 +18,7 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange, onStreamStart}) =
     //state to store WebSocket connections
     const [pointCloudSocket, setPointCloudSocket] = useState(null);
     const [intensitySocket, setIntensitySocket] = useState(null);
-    const [imageData, setFrameData] = useState(null);
+    const [frameData, setFrameData] = useState(null);
     const [isStreaming, setIsStreaming] = useState(false);
 
     if (!open) return null;
@@ -48,6 +49,7 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange, onStreamStart}) =
             try {
                 const jsonData = JSON.parse(messageData);
                 console.log('Received data: ', jsonData);
+                setFrameData(jsonData);
             } catch (error) {
                 console.error('Failed to parse received data', error);
             }
@@ -164,9 +166,7 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange, onStreamStart}) =
             <div>
                 <Button type='primary' style={{marginTop:'20px'}} onClick={handleCamSettings}>Change camera settings</Button>
             </div>
-            <div>
-            {imageData && <img src={imageData} alt="Received Image" />}
-            </div>
+            
         </div>
         </>
     );

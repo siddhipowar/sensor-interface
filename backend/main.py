@@ -75,7 +75,7 @@ async def xyz_websocket(websocket: WebSocket, serial: str):
     await websocket.accept()
     
     try:
-        await cm.start_streaming(True, False)
+        await cm.start_streaming(True, True)
 
         while cm.cam.isStreaming():
             frame = await cm.get_xyz_frames(serial)
@@ -84,10 +84,12 @@ async def xyz_websocket(websocket: WebSocket, serial: str):
                 break
 
             frame_array = np.asarray(frame)
-            frame_list = frame_array.tolist()
+            frame_array_modified = frame_array[0, :, :, :3]
+            frame_list = frame_array_modified.tolist()
             print(frame_list)
+            print(frame_array.shape)
 
-            frame_json = json.dumps(frame_array.tolist())
+            frame_json = json.dumps(frame_list)
 
             await websocket.send_text(frame_json)
 
