@@ -5,7 +5,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import '../CSS/StreamOptionModal.css'
 import axios from 'axios';
 import PointCloudViewer from './PointCloudRenderer';
-import {Canvas} from 'react-three-fiber';
+
 
 const StreamOptionModal = ({open, onClose, onCamSettingChange, onStreamStart}) => {
 
@@ -166,6 +166,12 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange, onStreamStart}) =
             <div>
                 <Button type='primary' style={{marginTop:'20px'}} onClick={handleCamSettings}>Change camera settings</Button>
             </div>
+            <div>
+                {isStreaming && frameData && (
+                    <PointCloudViewer frameData={frameData}></PointCloudViewer>
+                )}
+            </div>
+
             
         </div>
         </>

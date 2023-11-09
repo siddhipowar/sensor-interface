@@ -9,6 +9,11 @@ function Navbar() {
         <div className="navbar-logo">
           <img src="/images/quanergy_logo.jpg" alt="Logo" className="logo" />
         </div>
+        <ul>
+          <li>
+            <a href='/'>User Guide</a>
+          </li>
+        </ul>
         {/* <ul className="navbar-menu">
           <li className="navbar-item">
             <a href="/">Home</a>
