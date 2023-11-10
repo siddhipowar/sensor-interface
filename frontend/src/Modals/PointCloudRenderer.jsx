@@ -32,7 +32,7 @@ const PointCloudViewer = ({ frameData }) => {
 
       geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
 
-      const material = new THREE.PointsMaterial({ size: 15, color: 0x00ff00 });
+      const material = new THREE.PointsMaterial({ size: 1, color: 0x00ff00 });
 
       points = new THREE.Points(geometry, material);
       scene.add(points);
