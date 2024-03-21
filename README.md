@@ -23,10 +23,10 @@ Other applications like object detection and HDR can be integrated as its progra
 
 
  *Run backend*:
- cd backend
- venv\Scripts\activate
- python main.py
+ - cd backend
+ - venv\Scripts\activate
+ - python main.py
 
  *Run frontend*:
- cd frontend
- npm start
+ - cd frontend
+ - npm start
