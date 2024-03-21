@@ -86,8 +86,8 @@ async def xyz_websocket(websocket: WebSocket, serial: str):
             frame_array = np.asarray(frame)
             frame_array_modified = frame_array[0, :, :, :3]
             frame_list = frame_array_modified.tolist()
-            print(frame_list)
-            print(frame_array.shape)
+            
+            # print(frame_array.shape)
 
             frame_json = json.dumps(frame_list)
 

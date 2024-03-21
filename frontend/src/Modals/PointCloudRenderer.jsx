@@ -7,6 +7,42 @@ const PointCloudViewer = ({ frameData }) => {
   useEffect(() => {
     let camera, scene, points, renderer;
 
+    function getColor(z, zMin, zMax) {
+      // Ensure valid numbers and prevent division by zero
+      if (zMin === zMax || isNaN(z) || isNaN(zMin) || isNaN(zMax)) {
+        return { r: 0, g: 0, b: 0 };
+      }
+    
+      // Normalize z value
+      const zNorm = (z - zMin) / (zMax - zMin);
+    
+      // Define gradient breakpoints and colors
+      const gradient = [
+        { bp: 0, color: new THREE.Color(0x00ffff) },    // Blue-Green
+        { bp: 0.25, color: new THREE.Color(0x00ff00) }, // Green
+        { bp: 0.5, color: new THREE.Color(0xffff00) },  // Yellow
+        { bp: 0.75, color: new THREE.Color(0xff7f00) }, // Orange
+        { bp: 1, color: new THREE.Color(0xff0000) }     // Red
+      ];
+    
+      // Find the two breakpoints the zNorm falls between
+      let prevBp = gradient[0], nextBp = gradient[gradient.length - 1];
+      for (let i = 1; i < gradient.length; i++) {
+        if (zNorm < gradient[i].bp) {
+          nextBp = gradient[i];
+          prevBp = gradient[i - 1];
+          break;
+        }
+      }
+    
+      // Linear interpolation between the two colors
+      const alpha = (zNorm - prevBp.bp) / (nextBp.bp - prevBp.bp);
+      const color = prevBp.color.clone().lerp(nextBp.color, alpha);
+    
+      return { r: color.r, g: color.g, b: color.b };
+    }
+    
+
     const init = () => {
       camera = new THREE.PerspectiveCamera(27, window.innerWidth / window.innerHeight, 5, 3500);
       camera.position.z = 2750;
@@ -16,23 +52,48 @@ const PointCloudViewer = ({ frameData }) => {
 
       const geometry = new THREE.BufferGeometry();
       const positions = [];
+      const colors = []; 
 
       if (frameData) {
         let vertexIndex = 0;
+        let zmin = Number.POSITIVE_INFINITY;
+        let zmax = Number.NEGATIVE_INFINITY;
         for (let i = 0; i < frameData.length; i++) {
           const rowData = frameData[i];
           for (let j = 0; j < rowData.length; j++) {
             const [x, y, z] = rowData[j];
+            zmin = Math.min(zmin, z);
+            zmax = Math.max(zmax, z);
+            // positions[vertexIndex++] = x;
+            // positions[vertexIndex++] = y;
+            // positions[vertexIndex++] = z;
+
+            // // Calculate color based on z-coordinate using the getColor function
+            // const color = getColor(z, 1000, 3000);
+            // colors.push(color);
+            // Calculate color based on z-coordinate using the getColor function
+            // console.log(z, zmin, zmax);
+            const color = getColor(z, zmin, zmax);
+            
+            // Ensure color is a THREE.Color instance
+            const threeColor = new THREE.Color(color.r, color.g, color.b);
+
             positions[vertexIndex++] = x;
             positions[vertexIndex++] = y;
             positions[vertexIndex++] = z;
+
+            colors.push(threeColor.r, threeColor.g, threeColor.b);
           }
         }
       }
+      
+      //geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 
       geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
 
-      const material = new THREE.PointsMaterial({ size: 1, color: 0x00ff00 });
+      // const material = new THREE.PointsMaterial({ size: 1, color: 0x00ff00 });
+      const material = new THREE.PointsMaterial({ size: 1, vertexColors: true});
 
       points = new THREE.Points(geometry, material);
       scene.add(points);
@@ -82,112 +143,3 @@ export default PointCloudViewer;
 
 
   
-
-//   // const geometry = new THREE.BufferGeometry();
-//   // const vertices = new Float32Array(240 * 320 * 3); // Total number of vertices
-//   // geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-//   // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-//   // const pointCloud = new THREE.Mesh(geometry, material);
-//   // scene.add(pointCloud);
-
-//   // Create a geometry (a single quad)
-//   let imageData = new Float32Array(240 * 320 * 3); 
-
-//   const animate = () => {
-//     requestAnimationFrame(animate);
-
-//     if (frameData) {
-//       // Iterate through frameData and populate the vertices array
-//       // let vertexIndex = 0;
-//       // for (let i = 0; i < frameData.length; i++) {
-//       //   const rowData = frameData[i];
-//       //   for (let j = 0; j < rowData.length; j++) {
-//       //     const [x, y, z] = rowData[j];
-//       //     vertices[vertexIndex++] = x;
-//       //     vertices[vertexIndex++] = y;
-//       //     vertices[vertexIndex++] = z;
-//       //     // console.log(vertices)
-//       //   }
-//       // }
-//       function clipWithProportion(value, min, max) {
-//         return Math.min(Math.max(value, min), max);
-//       }
-      
-//       function clipProportional(value, originalMin, originalMax, targetMin, targetMax) {
-//         // Scale the value from the original range to the target range
-//         const scaledValue = ((value - originalMin) / (originalMax - originalMin)) * (targetMax - targetMin) + targetMin;
-      
-//         // Clip the scaled value to the target range
-//         return clipWithProportion(scaledValue, targetMin, targetMax);
-//       }
-
-//       let vertexIndex = 0;
-      
-//       for (let i = 0; i < frameData.length; i++) {
-//         const rowData = frameData[i];
-//         for (let j = 0; j < rowData.length; j++) {
-//           const [r, g, b] = rowData[j];
-//           let red=clipProportional(Math.abs(r*255), 0, 800, 0, 255);
-//           let green=clipProportional(Math.abs(g*255), 0, 800, 0, 255);
-//           let blue=clipProportional(Math.abs(b*255), 0, 800, 0, 255);
-//           let a = 255
-//           imageData[vertexIndex++] = red;
-//           imageData[vertexIndex++] = green;
-//           imageData[vertexIndex++] = blue;
-//           imageData[vertexIndex++] = a;
-//           // console.log(vertices)
-//         }
-//       }
-  
-// // Create a Uint8Array from the flattened array
-//       imageData = new Uint8Array(imageData);
-//       console.log("imageDta ", imageData)
-//       // pointCloud.geometry.attributes.position.needsUpdate = true;
-//     }
-
-//     const geometry = new THREE.PlaneGeometry(2, 2);
-
-// // Create an array of RGB values for each pixel (240x320)
-//       // This should contain your RGB data in the format [R, G, B, R, G, B, ...]
-
-// // Create a texture with your image data
-// const texture = new THREE.DataTexture(
-//   new Uint8Array(imageData),
-//   320,
-//   240,
-//   THREE.RGBAFormat
-// );
-
-
-// // Create a material using the texture
-// const material = new THREE.MeshBasicMaterial({ map: texture });
-
-// // Create a mesh
-// const mesh = new THREE.Mesh(geometry, material);
-// const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-// scene.add(mesh);
-// scene.add(ambientLight)
-// texture.needsUpdate = true;
-  
-//   camera.position.z = 5;
-
-//     // Update the cube's position or other elements based on frameData
-//     // Example: cube.rotation.x += frameData.rotationX;
-
-//     renderer.render(scene, camera);
-//   };
-
-//   useEffect(() => {
-//     animate(); // Start the animation loop
-//   }, []);
-
-//   // Update the scene or elements based on frameData whenever it changes
-//   useEffect(() => {
-//     // Example: cube.rotation.x = frameData.rotationX;
-//     // You can update other properties of the scene or objects here.
-//   }, [frameData]);
-
-  
-
-
-

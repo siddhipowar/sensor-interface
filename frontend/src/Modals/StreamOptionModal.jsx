@@ -36,7 +36,7 @@ const StreamOptionModal = ({open, onClose, onCamSettingChange, onStreamStart}) =
 
     // function to establish WebSocket connection
     const connectWebSocket = (endpoint) => {
-        const serialNumber = 2020045;
+        const serialNumber = "202004d";
         const socket = new WebSocket(`ws://localhost:8001/${endpoint}/${serialNumber}`);
 
         socket.addEventListener('open', (event) => {
